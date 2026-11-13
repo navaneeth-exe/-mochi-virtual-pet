@@ -6,6 +6,7 @@ import { usePet } from './hooks/usePet';
 import { useTasks } from './hooks/useTasks';
 
 import { TopBar } from './components/navigation/TopBar';
+import { BottomNav } from './components/navigation/BottomNav';
 import { ConsoleFrame } from './components/navigation/ConsoleFrame';
 import { Toast } from './components/common/Toast';
 import { SharedRoomModal } from './components/shared/SharedRoomModal';
@@ -53,8 +54,12 @@ export const App: React.FC = () => {
   }, [showToast]);
 
   const handleToggleChassis = useCallback(() => {
-    setSettings((prev) => ({ ...prev, chassisMode: !prev.chassisMode }));
-  }, []);
+    setSettings((prev) => {
+      const next = !prev.chassisMode;
+      showToast(next ? 'Retro Console Enabled' : 'Modern View Enabled');
+      return { ...prev, chassisMode: next };
+    });
+  }, [showToast]);
 
   // Tasks & Productivity State Hook
   const {
@@ -65,7 +70,7 @@ export const App: React.FC = () => {
     deleteTask,
     triggerReminder,
     pendingCount,
-    streakDays
+    streakDays,
   } = useTasks(
     (amount) => {
       // Reward berries when task completed
@@ -92,15 +97,19 @@ export const App: React.FC = () => {
     handleSetEmotionDirectly,
     awardBerries,
     handleCreateRoom,
-    handleJoinRoom
+    handleJoinRoom,
   } = usePet(tasks, showToast);
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center p-1 sm:p-4 bg-[#1E1E22] overflow-x-hidden">
+    <div
+      className={`w-full min-h-screen flex items-center justify-center p-2 sm:p-6 transition-colors duration-500 overflow-x-hidden ${
+        settings.chassisMode ? 'bg-[#1E1E22]' : 'bg-[#FAF8F5]'
+      }`}
+    >
       {/* Toast Alert */}
       <Toast message={toastMessage} />
 
-      {/* Handheld Frame Chassis Container */}
+      {/* Handheld Frame / Modern Device Chassis Container */}
       <ConsoleFrame
         enabled={settings.chassisMode}
         onFeedButton={handleFeed}
@@ -108,7 +117,7 @@ export const App: React.FC = () => {
         onTasksButton={() => setCurrentScreen('tasks')}
         onSettingsButton={() => setIsSettingsModalOpen(true)}
       >
-        <div className="lcd-screen w-full flex flex-col justify-between">
+        <div className="w-full flex flex-col justify-between min-h-[640px] bg-[#FFFFFF] relative overflow-hidden">
           {/* Top Bar Navigation (when not on welcome) */}
           {currentScreen !== 'welcome' && (
             <TopBar
@@ -119,13 +128,17 @@ export const App: React.FC = () => {
               onOpenShared={() => setCurrentScreen('shared')}
               onOpenSettings={() => setIsSettingsModalOpen(true)}
               pendingTasksCount={pendingCount}
+              berriesCount={pet.berriesCount}
             />
           )}
 
           {/* Active Screen View */}
-          <main className="flex-1 flex flex-col">
+          <main className="flex-1 flex flex-col overflow-y-auto">
             {currentScreen === 'welcome' && (
-              <WelcomeScreen onStart={() => setCurrentScreen('pet')} />
+              <WelcomeScreen
+                onStart={() => setCurrentScreen('pet')}
+                onJoinShared={() => setCurrentScreen('shared')}
+              />
             )}
 
             {currentScreen === 'pet' && (
@@ -182,6 +195,15 @@ export const App: React.FC = () => {
               />
             )}
           </main>
+
+          {/* Modern Bottom Navigation */}
+          {currentScreen !== 'welcome' && (
+            <BottomNav
+              currentScreen={currentScreen}
+              onNavigate={(screen) => setCurrentScreen(screen)}
+              pendingTasksCount={pendingCount}
+            />
+          )}
         </div>
       </ConsoleFrame>
 

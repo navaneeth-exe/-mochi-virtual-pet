@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Users, Copy, Check, Smartphone, KeyRound, Radio, ExternalLink, Plus } from 'lucide-react';
-import { Button } from '../components/common/Button';
+import { ArrowLeft, Users, Copy, Check, Smartphone, KeyRound, Radio, ExternalLink } from 'lucide-react';
+import { motion } from 'motion/react';
 import { RoomMember, EngineType } from '../core/sync/syncEngine';
 import { MochiUser } from '../core/firebase/auth';
+import { sound } from '../core/audio';
 
 interface SharedPetScreenProps {
   pairingCode: string;
@@ -18,20 +19,18 @@ export const SharedPetScreen: React.FC<SharedPetScreenProps> = ({
   pairingCode,
   onBack,
   onJoinRoom,
-  onCreateRoom,
   roomMembers = [],
   currentUser,
-  engineType = 'broadcast_channel'
+  engineType = 'broadcast_channel',
 }) => {
   const [inputCode, setInputCode] = useState('');
-  const [newRoomName, setNewRoomName] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(pairingCode);
+    navigator.clipboard?.writeText(pairingCode);
     setCopied(true);
+    sound.playChirp();
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -41,6 +40,7 @@ export const SharedPetScreen: React.FC<SharedPetScreenProps> = ({
       setIsConnecting(true);
       try {
         await onJoinRoom(inputCode.trim().toUpperCase());
+        sound.playVictory();
         setInputCode('');
       } finally {
         setIsConnecting(false);
@@ -48,179 +48,170 @@ export const SharedPetScreen: React.FC<SharedPetScreenProps> = ({
     }
   };
 
-  const handleCreateSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newRoomName.trim() && onCreateRoom) {
-      try {
-        await onCreateRoom(newRoomName.trim());
-        setIsCreating(false);
-        setNewRoomName('');
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
-
   const handleOpenSimulatedSession = () => {
+    sound.playChirp();
     window.open(window.location.href, '_blank', 'width=440,height=920');
   };
 
   return (
-    <div className="flex flex-col p-4 min-h-[520px] bg-[#EDECE6] space-y-3.5">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.25 }}
+      className="flex flex-col p-4 sm:p-5 min-h-[560px] bg-[#FAF8F5] space-y-4"
+    >
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-2 border-b-2 border-[#111111]">
-        <Button variant="light" size="sm" onClick={onBack} icon={<ArrowLeft size={14} />}>
-          Pet Room
-        </Button>
-        <h1 className="text-xs font-pixel font-bold uppercase tracking-wider text-[#111111]">
-          Co-Parent Room
-        </h1>
+      <div className="flex items-center justify-between pb-2 border-b border-[#E8E3D8]">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#F3EFE6] border border-[#E8E3D8] rounded-xl text-xs font-semibold text-[#18181B] transition-all shadow-xs"
+        >
+          <ArrowLeft size={14} />
+          <span>Pet Room</span>
+        </button>
+
+        <div className="flex items-center gap-1.5">
+          <Users size={16} className="text-[#C65A34]" />
+          <h1 className="text-sm font-bold text-[#18181B]">Shared Pet Room</h1>
+        </div>
+
         <div className="w-16" />
       </div>
 
-      <div className="space-y-3 flex-1 overflow-y-auto pr-1">
-        {/* Connection Engine Status Pill */}
-        <div className="flex items-center justify-between p-2 bg-[#FFFFFF] border-2 border-[#111111] rounded-lg shadow-[2px_2px_0px_#111111] text-[10px] font-mono">
-          <div className="flex items-center gap-1.5 font-bold">
-            <Radio size={12} className={engineType === 'firebase' ? 'text-green-600 animate-pulse' : 'text-amber-600'} />
-            <span>Backend Engine:</span>
+      <div className="space-y-3.5 flex-1 overflow-y-auto pr-1">
+        {/* Backend Engine Status Card */}
+        <div className="flex items-center justify-between p-3 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Radio
+                size={14}
+                className={
+                  engineType === 'firebase'
+                    ? 'text-[#2D6343] animate-pulse'
+                    : 'text-[#C65A34]'
+                }
+              />
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-[#18181B]">Multi-Device Sync</p>
+              <p className="text-[10px] text-[#71717A]">
+                {engineType === 'firebase'
+                  ? 'Firebase Realtime WebSockets'
+                  : 'Multi-Device Channel Sync'}
+              </p>
+            </div>
           </div>
-          <span className={`px-2 py-0.5 rounded font-bold ${
-            engineType === 'firebase'
-              ? 'bg-green-100 text-green-800 border border-green-300'
-              : 'bg-amber-100 text-amber-800 border border-amber-300'
-          }`}>
-            {engineType === 'firebase' ? 'Firebase Realtime DB (Live)' : 'Multi-Device Broadcast (Local)'}
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#E8F2EA] text-[#2D6343] border border-[#D0E4D4]">
+            Live Sync Active
           </span>
         </div>
 
-        {/* Current Pet Sharing Code */}
-        <div className="p-3 bg-[#FFFFFF] border-2 border-[#111111] rounded-lg shadow-[2px_2px_0px_#111111] text-center space-y-1.5">
-          <div className="text-[10px] font-mono uppercase tracking-widest text-[#4B5563]">
-            Active Pet Pairing Code
-          </div>
-          <div className="text-2xl font-mono font-black tracking-widest text-[#111111] bg-[#EDECE6] py-1.5 px-4 border border-[#111111] rounded inline-block">
-            {pairingCode}
-          </div>
-          <div className="flex items-center justify-center gap-2 pt-1">
-            <Button
-              variant="dark"
-              size="sm"
+        {/* Room Code Card with One-Click Copy */}
+        <div className="p-4 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-sm text-center space-y-2">
+          <span className="text-[11px] font-semibold text-[#71717A] tracking-wider uppercase">
+            Your Pet's Room Code
+          </span>
+
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-2xl sm:text-3xl font-mono font-extrabold tracking-widest text-[#18181B] bg-[#FAF8F5] px-4 py-1.5 rounded-xl border border-[#E8E3D8]">
+              {pairingCode}
+            </span>
+            <button
               onClick={handleCopy}
-              icon={copied ? <Check size={13} /> : <Copy size={13} />}
+              className="p-3 bg-[#18181B] hover:bg-[#27272A] text-[#FFFFFF] rounded-xl transition-all shadow-xs"
+              title="Copy code"
             >
-              {copied ? 'Code Copied!' : 'Copy Code'}
-            </Button>
-            {onCreateRoom && (
-              <Button
-                variant="light"
-                size="sm"
-                onClick={() => setIsCreating(!isCreating)}
-                icon={<Plus size={13} />}
-              >
-                New Pet
-              </Button>
-            )}
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+            </button>
           </div>
+
+          <p className="text-[11px] text-[#71717A] max-w-xs mx-auto">
+            Share this 6-character code with a friend or family member to raise Mochi together in real time!
+          </p>
         </div>
 
-        {/* Create Room Form (Collapsible) */}
-        {isCreating && (
-          <form onSubmit={handleCreateSubmit} className="p-3 bg-[#FFFFFF] border-2 border-[#111111] rounded-lg shadow-[2px_2px_0px_#111111] space-y-2 animate-fade-in">
-            <div className="text-xs font-mono font-bold text-[#111111]">
-              Create New Shared Pet Instance
-            </div>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={newRoomName}
-                onChange={(e) => setNewRoomName(e.target.value)}
-                placeholder="Pet Name (e.g. Mochi)..."
-                maxLength={20}
-                className="flex-1 px-3 py-1.5 text-xs font-mono border-2 border-[#111111] rounded bg-[#EDECE6] text-[#111111] focus:outline-none"
-              />
-              <Button variant="dark" size="sm" type="submit">
-                Create
-              </Button>
-            </div>
-          </form>
-        )}
-
-        {/* Join Other Pet Form */}
-        <form onSubmit={handleJoinSubmit} className="p-3 bg-[#FFFFFF] border-2 border-[#111111] rounded-lg shadow-[2px_2px_0px_#111111] space-y-2">
-          <div className="text-xs font-mono font-bold text-[#111111] flex items-center gap-1.5">
-            <KeyRound size={13} />
-            Connect to Co-Caretaker's Room
+        {/* Join Another Room Form */}
+        <div className="p-4 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-sm space-y-2.5">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-[#18181B]">
+            <KeyRound size={14} className="text-[#C65A34]" />
+            <span>Join Another Companion</span>
           </div>
-          <div className="flex gap-2">
+
+          <form onSubmit={handleJoinSubmit} className="flex gap-2">
             <input
               type="text"
               value={inputCode}
               onChange={(e) => setInputCode(e.target.value.toUpperCase())}
               placeholder="e.g. MCH-842"
-              maxLength={8}
-              className="flex-1 px-3 py-1.5 text-xs font-mono font-bold uppercase border-2 border-[#111111] rounded bg-[#EDECE6] text-[#111111] focus:outline-none"
+              maxLength={7}
+              className="flex-1 px-3 py-2 text-xs font-mono font-bold tracking-wider uppercase bg-[#FAF8F5] border border-[#E8E3D8] rounded-xl text-[#18181B] focus:outline-none focus:border-[#18181B]"
             />
-            <Button variant="dark" size="sm" type="submit" disabled={isConnecting}>
-              {isConnecting ? 'Joining...' : 'Connect'}
-            </Button>
-          </div>
-        </form>
-
-        {/* Connected Caretakers List */}
-        <div className="space-y-2">
-          <div className="text-[11px] font-mono font-bold uppercase text-[#111111] flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <Users size={14} />
-              Connected Caretakers ({roomMembers.length || 1})
-            </span>
             <button
-              onClick={handleOpenSimulatedSession}
-              className="flex items-center gap-1 text-[10px] text-[#4B5563] hover:text-[#111111] underline"
-              title="Open linked second phone window"
+              type="submit"
+              disabled={isConnecting || inputCode.trim().length < 4}
+              className="px-4 py-2 bg-[#18181B] hover:bg-[#27272A] disabled:opacity-40 text-[#FFFFFF] text-xs font-semibold rounded-xl transition-all shadow-xs shrink-0"
             >
-              <ExternalLink size={10} />
-              Open 2nd Phone
+              {isConnecting ? 'Joining...' : 'Join Room'}
             </button>
+          </form>
+        </div>
+
+        {/* Connected Caretakers Roster */}
+        <div className="p-4 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-sm space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#18181B] flex items-center gap-1.5">
+              <Smartphone size={14} className="text-[#407655]" />
+              Active Caretakers ({roomMembers.length || 1})
+            </span>
+            <span className="text-[10px] text-[#71717A]">
+              UID: {currentUser?.uid.slice(0, 8) || 'session'}
+            </span>
           </div>
 
           <div className="space-y-1.5">
-            {roomMembers.length === 0 ? (
-              <div className="flex items-center justify-between p-2.5 bg-[#FFFFFF] border border-[#111111] rounded text-xs font-mono">
-                <span className="flex items-center gap-2">
-                  <Smartphone size={14} />
-                  {currentUser?.displayName || 'Phone A (You)'}
-                </span>
-                <span className="text-[10px] px-2 py-0.5 bg-[#111111] text-[#FFFFFF] rounded">
-                  Owner
-                </span>
-              </div>
-            ) : (
-              roomMembers.map((member) => (
+            {roomMembers.length > 0 ? (
+              roomMembers.map((member, i) => (
                 <div
-                  key={member.uid}
-                  className="flex items-center justify-between p-2.5 bg-[#FFFFFF] border border-[#111111] rounded text-xs font-mono"
+                  key={member.uid || i}
+                  className="flex items-center justify-between p-2 rounded-xl bg-[#FAF8F5] border border-[#E8E3D8] text-xs"
                 >
-                  <span className="flex items-center gap-2">
-                    <Smartphone size={14} />
-                    <span>{member.displayName}</span>
-                    {member.uid === currentUser?.uid && (
-                      <span className="text-[9px] text-[#4B5563]">(You)</span>
-                    )}
-                  </span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded ${
-                    member.role === 'owner'
-                      ? 'bg-[#111111] text-[#FFFFFF]'
-                      : 'bg-[#EDECE6] border border-[#111111] text-[#111111]'
-                  }`}>
-                    {member.role === 'owner' ? 'Owner' : 'Caretaker'}
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#407655]" />
+                    <span className="font-medium text-[#18181B]">
+                      {member.displayName || `Caretaker ${i + 1}`}
+                    </span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#FFFFFF] border border-[#E8E3D8] text-[#71717A] capitalize font-medium">
+                    {member.role || 'Caretaker'}
                   </span>
                 </div>
               ))
+            ) : (
+              <div className="flex items-center justify-between p-2 rounded-xl bg-[#FAF8F5] border border-[#E8E3D8] text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#407655]" />
+                  <span className="font-medium text-[#18181B]">You (Owner)</span>
+                </div>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E8F2EA] border border-[#D0E4D4] text-[#2D6343] font-semibold">
+                  Online
+                </span>
+              </div>
             )}
           </div>
         </div>
+
+        {/* Local Test Window Launcher */}
+        <div className="pt-1">
+          <button
+            onClick={handleOpenSimulatedSession}
+            className="w-full py-2.5 px-4 bg-[#FAF8F5] hover:bg-[#F3EFE6] border border-[#E8E3D8] rounded-xl text-xs font-semibold text-[#52525B] hover:text-[#18181B] flex items-center justify-center gap-2 transition-all shadow-xs"
+          >
+            <ExternalLink size={14} />
+            <span>Open Second Phone Window (Multi-Device Test)</span>
+          </button>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

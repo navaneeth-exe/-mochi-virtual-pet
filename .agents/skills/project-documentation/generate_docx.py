@@ -487,6 +487,45 @@ def build_mochi_document(output_path, base_dir):
                 "Automated test scripts/test_phase6_qa.js: 15/15 passed (100%). Total automated tests across all suites: 36/36 passed (100%)."
             ),
             "decision": "Accepted and fully verified with live Puppeteer QA test runner."
+        },
+        {
+            "num": "Prompt Entry 011",
+            "task": "Complete Premium Product Transformation & Modern Visual Overhaul",
+            "tool": "Google DeepMind Antigravity AI Engine (React 19 + Motion + Tailwind v4 + Vite 6)",
+            "date": "2026-11-13",
+            "orig": (
+                "# MOCHI — COMPLETE PREMIUM PRODUCT TRANSFORMATION\n"
+                "Transform the existing MOCHI Virtual Pet AI application into an exceptionally polished, modern, beautiful, "
+                "interactive, production-quality virtual pet experience. Thoroughly improve frontend technology and architecture, "
+                "visual identity and design system, every application screen, character presentation and animations, navigation "
+                "and interactions, productivity experience, shared-pet experience, mobile and desktop responsiveness. "
+                "Select suitable modern technologies (Motion, modern CSS tokens, Radix/accessible primitives). "
+                "Develop an exceptional design system using warm cream/off-white, soft lavender, muted pastel green, soft peach, gentle blue. "
+                "Mochi itself must remain strictly black and white. Redesign home, tasks, shared pet, settings, onboarding, and navigation. "
+                "Maintain all existing working functionality. Verify and document thoroughly."
+            ),
+            "refine": (
+                "Install motion/react and canvas-confetti. Upgrade MochiCharacter.tsx to physics-based spring breathing loops, "
+                "interactive petting affection heart particles, draggable spring with illuminated top drop-zone feeding, "
+                "double-tap ecstatic spring bounce, and spacebar horizontal sprint. Redesign PetStats into modern animated pill progress gauges. "
+                "Build tactile ActionDock with berry counter badge. Create BottomNav for mobile-first navigation and dual-mode chassis toggle in ConsoleFrame. "
+                "Rebuild Tasks with filter tabs (All/Active/Completed), flame streak counter, and confetti dopamine loop. "
+                "Elevate SharedPetScreen into a comprehensive Co-Parenting Hub with 1-click room code copying and WebSocket heartbeat. "
+                "Author scripts/verify_premium_transformation.js capturing 13 genuine high-resolution screenshots."
+            ),
+            "reason": (
+                "Transform the virtual pet companion from a nostalgic prototype into a delightful, commercial-grade digital companion "
+                "comparable to Finch and Tamagotchi while strictly preserving 100% of the mandatory assignment constraints."
+            ),
+            "output": (
+                "src/styles/index.css (design tokens & pastel palette), src/components/pet/MochiCharacter.tsx (Motion spring loops), "
+                "src/components/pet/PetStats.tsx (animated pill gauges), src/components/pet/ActionDock.tsx (tactile spring buttons), "
+                "src/components/navigation/BottomNav.tsx (mobile navigation), src/screens/MainPetScreen.tsx (dynamic room lighting & expressions), "
+                "src/screens/TasksScreen.tsx & TaskList.tsx (filter tabs, streak, confetti), src/screens/SharedPetScreen.tsx (Co-Parent Hub), "
+                "src/screens/WelcomeScreen.tsx (chip narrative & interactive preview), src/screens/SettingsScreen.tsx (audio synth test player), "
+                "docs/ultimate-design-transformation-report.md, and 13 genuine screenshots in submission/ultimate-design-overhaul/."
+            ),
+            "decision": "Accepted and fully verified with live Puppeteer QA test runner."
         }
     ]
     
@@ -913,6 +952,12 @@ def build_mochi_document(output_path, base_dir):
     print(f"Successfully generated: {output_path}")
 
 if __name__ == "__main__":
-    base = os.path.abspath("MOCHI-VIRTUAL-PET")
+    cwd = os.getcwd()
+    if os.path.exists(os.path.join(cwd, "submission")):
+        base = cwd
+    elif os.path.exists(os.path.join(cwd, "MOCHI-VIRTUAL-PET", "submission")):
+        base = os.path.join(cwd, "MOCHI-VIRTUAL-PET")
+    else:
+        base = os.path.abspath("MOCHI-VIRTUAL-PET")
     out = os.path.join(base, "submission", "MOCHI_AI_Prompts_and_Outputs.docx")
     build_mochi_document(out, base)

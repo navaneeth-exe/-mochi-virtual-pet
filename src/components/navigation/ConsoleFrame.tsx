@@ -16,14 +16,18 @@ export const ConsoleFrame: React.FC<ConsoleFrameProps> = ({
   onFeedButton,
   onPlayButton,
   onTasksButton,
-  onSettingsButton
+  onSettingsButton,
 }) => {
   if (!enabled) {
-    return <div className="w-full max-w-md mx-auto">{children}</div>;
+    return (
+      <div className="w-full max-w-[460px] mx-auto bg-[#FFFFFF] rounded-3xl shadow-[0_16px_48px_rgba(24,24,27,0.08)] border border-[#E8E3D8] overflow-hidden flex flex-col transition-all">
+        {children}
+      </div>
+    );
   }
 
   return (
-    <div className="handheld-chassis max-w-[460px] w-full mx-auto my-1 sm:my-4 flex flex-col items-center overflow-hidden">
+    <div className="handheld-chassis max-w-[460px] w-full mx-auto my-1 sm:my-4 flex flex-col items-center overflow-hidden transition-all">
       {/* Console Brand Header */}
       <div className="w-full flex items-center justify-between px-3 pb-3 text-[#9CA3AF]">
         <div className="flex items-center gap-1.5">
@@ -37,7 +41,7 @@ export const ConsoleFrame: React.FC<ConsoleFrameProps> = ({
       </div>
 
       {/* Screen Window Viewport */}
-      <div className="w-full rounded-2xl overflow-hidden shadow-inner border-2 border-[#111111]">
+      <div className="w-full rounded-2xl overflow-hidden shadow-inner border-2 border-[#111111] bg-[#FAF8F5]">
         {children}
       </div>
 
@@ -45,7 +49,6 @@ export const ConsoleFrame: React.FC<ConsoleFrameProps> = ({
       <div className="w-full pt-4 sm:pt-6 pb-2 px-1 sm:px-4 flex items-center justify-between scale-[0.82] min-[380px]:scale-90 sm:scale-100 origin-center transition-transform">
         {/* Left: Directional D-Pad */}
         <div className="relative w-24 h-24 flex items-center justify-center">
-          {/* Vertical bar */}
           <div className="absolute w-8 h-24 bg-[#1E1E22] border-2 border-[#111111] rounded-md shadow-md flex flex-col justify-between items-center py-1">
             <button
               onClick={() => sound.playChirp()}
@@ -60,7 +63,6 @@ export const ConsoleFrame: React.FC<ConsoleFrameProps> = ({
               ▼
             </button>
           </div>
-          {/* Horizontal bar */}
           <div className="absolute w-24 h-8 bg-[#1E1E22] border-2 border-[#111111] rounded-md shadow-md flex justify-between items-center px-1">
             <button
               onClick={() => sound.playChirp()}
@@ -75,63 +77,61 @@ export const ConsoleFrame: React.FC<ConsoleFrameProps> = ({
               ▶
             </button>
           </div>
-          {/* Center axis */}
           <div className="absolute w-5 h-5 rounded-full bg-[#141416]" />
         </div>
 
-        {/* Center: SELECT / START Pill Buttons */}
-        <div className="flex gap-4 -rotate-12 pt-6">
-          <div className="flex flex-col items-center gap-1">
+        {/* Center: System Start / Select Buttons */}
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col items-center">
             <button
-              onClick={onTasksButton}
-              className="w-10 h-3.5 bg-[#4B5563] border border-[#111111] rounded-full shadow active:translate-y-0.5"
-              title="Open Tasks (SELECT)"
+              onClick={() => {
+                sound.playChirp();
+                onTasksButton();
+              }}
+              className="w-10 h-3 bg-[#374151] rounded-full -rotate-25 border border-[#111111] shadow active:translate-y-0.5"
             />
-            <span className="text-[8px] font-mono tracking-widest text-[#9CA3AF] font-bold">
-              TASKS
-            </span>
+            <span className="text-[8px] font-mono text-[#9CA3AF] mt-1 tracking-tighter">TASKS</span>
           </div>
-
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center">
             <button
-              onClick={onSettingsButton}
-              className="w-10 h-3.5 bg-[#4B5563] border border-[#111111] rounded-full shadow active:translate-y-0.5"
-              title="Open Settings (START)"
+              onClick={() => {
+                sound.playChirp();
+                onSettingsButton();
+              }}
+              className="w-10 h-3 bg-[#374151] rounded-full -rotate-25 border border-[#111111] shadow active:translate-y-0.5"
             />
-            <span className="text-[8px] font-mono tracking-widest text-[#9CA3AF] font-bold">
-              CONFIG
-            </span>
+            <span className="text-[8px] font-mono text-[#9CA3AF] mt-1 tracking-tighter">CONFIG</span>
           </div>
         </div>
 
-        {/* Right: A & B Action Buttons */}
-        <div className="flex items-center gap-3 -rotate-12">
-          {/* B Button (Play) */}
-          <div className="flex flex-col items-center gap-1">
+        {/* Right: Round Action Buttons (B & A) */}
+        <div className="flex items-center gap-3.5 -rotate-12">
+          <div className="flex flex-col items-center">
             <button
-              onClick={onPlayButton}
-              className="w-10 h-10 rounded-full bg-[#374151] text-[#E5E7EB] font-pixel text-xs font-bold border-2 border-[#111111] shadow-[2px_3px_0px_#111111] active:translate-x-0.5 active:translate-y-0.5"
-              title="Play (Button B)"
+              onClick={() => {
+                sound.playBite();
+                onFeedButton();
+              }}
+              className="w-10 h-10 rounded-full bg-[#1F2937] border-2 border-[#111111] text-[#E5E7EB] font-pixel text-[10px] font-bold shadow-md active:translate-y-1 flex items-center justify-center"
             >
               B
             </button>
-            <span className="text-[8px] font-mono text-[#9CA3AF] font-bold">PLAY</span>
+            <span className="text-[8px] font-mono text-[#9CA3AF] mt-1">FEED</span>
           </div>
-
-          {/* A Button (Feed) */}
-          <div className="flex flex-col items-center gap-1 -translate-y-3">
+          <div className="flex flex-col items-center -mt-4">
             <button
-              onClick={onFeedButton}
-              className="w-10 h-10 rounded-full bg-[#111111] text-[#FFFFFF] font-pixel text-xs font-bold border-2 border-[#111111] shadow-[2px_3px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5"
-              title="Feed (Button A)"
+              onClick={() => {
+                sound.playVictory();
+                onPlayButton();
+              }}
+              className="w-10 h-10 rounded-full bg-[#374151] border-2 border-[#111111] text-[#FFFFFF] font-pixel text-[10px] font-bold shadow-md active:translate-y-1 flex items-center justify-center"
             >
               A
             </button>
-            <span className="text-[8px] font-mono text-[#9CA3AF] font-bold">FEED</span>
+            <span className="text-[8px] font-mono text-[#9CA3AF] mt-1">PLAY</span>
           </div>
         </div>
       </div>
     </div>
   );
 };
-

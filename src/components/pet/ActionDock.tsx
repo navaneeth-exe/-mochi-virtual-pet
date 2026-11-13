@@ -1,6 +1,6 @@
 import React from 'react';
 import { Utensils, Play, Sparkles, Moon, Sun } from 'lucide-react';
-import { Button } from '../common/Button';
+import { motion } from 'motion/react';
 
 interface ActionDockProps {
   onFeed: () => void;
@@ -20,61 +20,76 @@ export const ActionDock: React.FC<ActionDockProps> = ({
   berriesCount,
 }) => {
   return (
-    <div className="flex items-center justify-center gap-2.5 p-2 bg-[#FFFFFF] border-2 border-[#111111] rounded-xl shadow-[3px_3px_0px_#111111] w-full">
+    <div className="w-full bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl p-2 shadow-sm flex items-center justify-between gap-2">
       {/* Feed Button */}
-      <Button
-        variant="light"
-        size="md"
+      <motion.button
+        whileHover={!isSleeping && berriesCount > 0 ? { scale: 1.03 } : {}}
+        whileTap={!isSleeping && berriesCount > 0 ? { scale: 0.95 } : {}}
         onClick={onFeed}
         disabled={isSleeping || berriesCount <= 0}
-        icon={<Utensils size={14} />}
-        className="flex-1"
-        title="Feed Mochi"
+        title="Feed Mochi a delicious snack"
+        className={`flex-1 flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
+          isSleeping || berriesCount <= 0
+            ? 'opacity-40 cursor-not-allowed bg-[#F3EFE6] text-[#A1A1AA]'
+            : 'bg-[#FDF0EB] text-[#C65A34] hover:bg-[#FBE5DC] border border-[#F6DACF]'
+        }`}
       >
-        <span>Feed</span>
-        <span className="ml-1 px-1.5 py-0.2 bg-[#EDECE6] border border-[#111111] rounded-full text-[9px] font-mono">
+        <Utensils size={15} />
+        <span className="text-[11px] sm:text-xs">Feed</span>
+        <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 bg-[#FFFFFF] rounded-full border border-[#F6DACF]">
           {berriesCount}
         </span>
-      </Button>
+      </motion.button>
 
       {/* Play Button */}
-      <Button
-        variant="light"
-        size="md"
+      <motion.button
+        whileHover={!isSleeping ? { scale: 1.03 } : {}}
+        whileTap={!isSleeping ? { scale: 0.95 } : {}}
         onClick={onPlay}
         disabled={isSleeping}
-        icon={<Play size={14} />}
-        className="flex-1"
-        title="Play with Mochi"
+        title="Play a quick game with Mochi"
+        className={`flex-1 flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
+          isSleeping
+            ? 'opacity-40 cursor-not-allowed bg-[#F3EFE6] text-[#A1A1AA]'
+            : 'bg-[#EBF4FC] text-[#2C6496] hover:bg-[#DEEEFB] border border-[#D0E4F5]'
+        }`}
       >
-        Play
-      </Button>
+        <Play size={15} />
+        <span className="text-[11px] sm:text-xs">Play</span>
+      </motion.button>
 
       {/* Pet Button */}
-      <Button
-        variant="light"
-        size="md"
+      <motion.button
+        whileHover={!isSleeping ? { scale: 1.03 } : {}}
+        whileTap={!isSleeping ? { scale: 0.95 } : {}}
         onClick={onPet}
         disabled={isSleeping}
-        icon={<Sparkles size={14} />}
-        className="flex-1"
-        title="Pet Mochi"
+        title="Gently pet Mochi"
+        className={`flex-1 flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
+          isSleeping
+            ? 'opacity-40 cursor-not-allowed bg-[#F3EFE6] text-[#A1A1AA]'
+            : 'bg-[#EFEAF8] text-[#5B488C] hover:bg-[#E4DAF3] border border-[#DED4EE]'
+        }`}
       >
-        Pet
-      </Button>
+        <Sparkles size={15} />
+        <span className="text-[11px] sm:text-xs">Pet</span>
+      </motion.button>
 
       {/* Sleep / Wake Button */}
-      <Button
-        variant={isSleeping ? 'dark' : 'light'}
-        size="md"
+      <motion.button
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.95 }}
         onClick={onToggleSleep}
-        icon={isSleeping ? <Sun size={14} /> : <Moon size={14} />}
-        className="flex-1"
-        title={isSleeping ? 'Wake up Mochi' : 'Put Mochi to sleep'}
+        title={isSleeping ? 'Wake up Mochi' : 'Tuck Mochi into bed'}
+        className={`flex-1 flex flex-col sm:flex-row items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all ${
+          isSleeping
+            ? 'bg-[#18181B] text-[#FFFFFF] hover:bg-[#27272A]'
+            : 'bg-[#F3EFE6] text-[#52525B] hover:bg-[#EAE4D5] border border-[#E8E3D8]'
+        }`}
       >
-        {isSleeping ? 'Wake' : 'Sleep'}
-      </Button>
+        {isSleeping ? <Sun size={15} /> : <Moon size={15} />}
+        <span className="text-[11px] sm:text-xs">{isSleeping ? 'Wake' : 'Rest'}</span>
+      </motion.button>
     </div>
   );
 };
-

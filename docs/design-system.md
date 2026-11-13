@@ -45,6 +45,22 @@ Every UI element and sprite strictly adheres to this 6-token grayscale spectrum:
 
 ---
 
+## 2B. Elevated Premium Palette & Motion Tokens (Transformation Update)
+
+In accordance with the commercial-grade product transformation, the surrounding application environment incorporates a tasteful, warm, and sophisticated pastel palette inspired by Finch and Apple-quality mobile applications, while **Mochi itself remains 100% strictly monochrome black-and-white pixel art**:
+
+| Token Variable | Hex Code | Visual Swatch | Semantic Purpose & Usage |
+| :--- | :--- | :--- | :--- |
+| `--color-bg-canvas` | `#FAF8F5` | ![#FAF8F5](https://via.placeholder.com/14/FAF8F5/FAF8F5.png) | Primary warm eggshell canvas backdrop; soft, calming, non-fatiguing. |
+| `--color-bg-card` | `#FFFFFF` | ![#FFFFFF](https://via.placeholder.com/14/FFFFFF/FFFFFF.png) | Pure card surface with diffused ambient shadows (`shadow-sm`, `shadow-md`). |
+| `--color-ink-primary` | `#18181B` | ![#18181B](https://via.placeholder.com/14/18181B/18181B.png) | Deep crisp charcoal ink typography and high-contrast iconography. |
+| `--color-pastel-sage` | `#E8F2EA` | ![#E8F2EA](https://via.placeholder.com/14/E8F2EA/E8F2EA.png) | Energy gauge background, task completion badges, online presence indicators. |
+| `--color-pastel-lavender` | `#EFEAF8` | ![#EFEAF8](https://via.placeholder.com/14/EFEAF8/EFEAF8.png) | Joy & Happiness gauge background, affection petting highlights. |
+| `--color-pastel-peach` | `#FDF0EB` | ![#FDF0EB](https://via.placeholder.com/14/FDF0EB/FDF0EB.png) | Fullness & Hunger gauge background, berry reserve counters, action accents. |
+| `--color-pastel-sky` | `#EBF4FC` | ![#EBF4FC](https://via.placeholder.com/14/EBF4FC/EBF4FC.png) | Play & activity button surfaces, interactive gesture highlights. |
+
+---
+
 ## 3. Typography Hierarchy
 
 MOCHI pairs a charming retro pixel header font with a highly legible, clean monospace/sans-serif body font for optimal readability across standard and retina displays.
