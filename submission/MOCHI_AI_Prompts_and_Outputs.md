@@ -23,6 +23,11 @@
    - [Prompt Entry 006: Character Sprite Slicing, Transparency & Pixel Art Extraction](#prompt-entry-006-character-sprite-slicing-transparency--pixel-art-extraction)
    - [Prompt Entry 007: Phase 3 Frontend Implementation, Reactive UI & 8-Bit Web Audio Engine](#prompt-entry-007-phase-3-frontend-implementation-reactive-ui--8-bit-web-audio-engine)
    - [Prompt Entry 008: Pet Mechanics, State Engine, Local Persistence & Productivity](#prompt-entry-008-pet-mechanics-state-engine-local-persistence--productivity)
+   - [Prompt Entry 009: Phase 5 — Firebase Backend & Shared Virtual Pet Implementation](#prompt-entry-009-phase-5--firebase-backend--shared-virtual-pet-implementation)
+   - [Prompt Entry 010: Phase 6 — Complete QA, Debugging, Security Audit & Refinement](#prompt-entry-010-phase-6--complete-qa-debugging-security-audit--refinement)
+   - [Prompt Entry 011: Complete Premium Product Transformation & Modern Visual Overhaul](#prompt-entry-011-complete-premium-product-transformation--modern-visual-overhaul)
+   - [Prompt Entry 012: Critical Requirement — Perfect Mobile + Desktop Responsiveness across 9 Viewports](#prompt-entry-012-critical-requirement--perfect-mobile--desktop-responsiveness-across-9-viewports)
+   - [Prompt Entry 013: Live Website UI Bug Hunt & Automatic Fixing](#prompt-entry-013-live-website-ui-bug-hunt--automatic-fixing)
 3. [Section C: Final Assignment Outputs](#section-c-final-assignment-outputs)
    - [C.1 Final Story & Companion Narrative (Task 1)](#c1-final-story--companion-narrative-task-1)
    - [C.2 Character Generation Prompts (Task 2)](#c2-character-generation-prompts-task-2)
@@ -316,6 +321,31 @@ This section preserves all primary and refinement prompts used during ideation, 
   - 10 genuine screenshots in `submission/ultimate-design-overhaul/responsive/`
   - Zero horizontal overflow across all 9 viewports: 320px, 375px, 390px, 430px, 768px, 1024px, 1366px, 1440px, 1920px (100% pass rate)
   - Production build compiled cleanly in 4.87s (`dist/`)
+- **Final Decision:** ACCEPTED & MERGED INTO PRODUCTION.
+
+### Prompt Entry 013: Live Website UI Bug Hunt & Automatic Fixing
+
+- **Task / Objective:** Launch the live MOCHI application on Vite dev server, inspect in a real Chromium browser via Puppeteer automation, discover every visible UI/UX, interaction, layout, or accessibility defect, repair them directly in application source code, verify zero runtime errors or overflows across 9 viewports, and document findings in `docs/ui-bug-audit-report.md`.
+- **AI Tool Used:** Google DeepMind Antigravity AI Engine (React 19 + TypeScript 5.8 + Puppeteer 25 + Tailwind CSS)
+- **Date of Generation:** 2026-11-13
+- **Exact Original Prompt:**
+  > *"# FINAL REQUIREMENT: LIVE WEBSITE UI BUG HUNT AND AUTOMATIC FIXING\nYour task is to launch the actual MOCHI application, thoroughly inspect it in a real browser, identify every visible UI/UX defect, and fix all issues you can reproduce. Do not limit this task to reading source code or running automated tests. You MUST run and visually inspect the actual website.\n1. Launch the application (Vite dev server, open in browser automation tools, check console/network).\n2. Perform a complete visual inspection (Home, stats, controls, tasks, shared pet, settings, modals, overlays, responsive layouts).\n3. Identify all bugs (styling, misalignment, contrast, hover/active states, transitions, broken clicks, overflow, console errors).\n4. Fix every issue found directly in source code and re-test live.\n5. Produce a comprehensive report in docs/ui-bug-audit-report.md with table | Issue | Screen | Severity | Root cause | Fix applied | Verified |, tested viewports, console logs, and build results."*
+- **Refinement Prompt:**
+  > *"Modernize Toast.tsx with motion/react physics, pill geometry, and z-50 elevation. Modernize Modal.tsx with AnimatePresence, backdrop springs, Escape key handler, and click-outside dismissal. Upgrade SharedRoomModal.tsx and SettingsModal.tsx with modern borders and feedback. In TopBar.tsx, implement room code copy checkmark feedback and hide redundant bottom nav on desktop (md:hidden). Fix TypeScript strict unused variable warnings in TopBar, MainPetScreen, and SettingsScreen. Run scripts/live_ui_bug_hunt.js and scripts/verify_responsive_matrix.js to verify zero runtime errors, zero failed network requests, and zero horizontal overflow across all 9 viewports. Document findings in docs/ui-bug-audit-report.md."*
+- **Reason for Refinement:** Address live interaction edge cases (modal keyboard dismiss, toast stacking elevation, responsive navigation redundancy, and clipboard visual feedback) to guarantee commercial production stability.
+- **Generated Output / Result:**
+  - `src/components/common/Toast.tsx` (spring-animated floating notification pill)
+  - `src/components/common/Modal.tsx` (accessible `AnimatePresence` modal with Escape key dismiss)
+  - `src/components/shared/SharedRoomModal.tsx` (enhanced room code modal with copy feedback)
+  - `src/components/settings/SettingsModal.tsx` (modern settings dialog)
+  - `src/components/navigation/TopBar.tsx` (clipboard checkmark feedback & desktop tabs)
+  - `src/components/navigation/BottomNav.tsx` (`md:hidden` mobile-only bottom bar)
+  - `scripts/live_ui_bug_hunt.js` (live Puppeteer automated interaction audit script)
+  - `docs/ui-bug-audit-report.md` (complete issue & remediation audit report)
+  - 8 audit screenshots in `submission/ultimate-design-overhaul/bug-audit/`
+  - Automated inspection results: 0 page runtime errors, 0 failed network requests, 0 UI issues detected
+  - 9-viewport responsive matrix: 100% pass with zero horizontal scroll
+  - Production build compiled in 7.14s with zero TypeScript warnings or errors (`dist/`)
 - **Final Decision:** ACCEPTED & MERGED INTO PRODUCTION.
 
 ---

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX, RotateCcw, Info, Bell, Monitor, CheckCircle2 } from 'lucide-react';
 import { Modal } from '../common/Modal';
-import { Button } from '../common/Button';
 import { sound } from '../../core/audio';
 import {
   isNotificationSupported,
   getNotificationPermission,
   requestNotificationPermission,
-  sendNotification
+  sendNotification,
 } from '../../core/notifications';
 
 interface SettingsModalProps {
@@ -29,7 +28,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onToggleMute,
   chassisMode,
   onToggleChassis,
-  onBackToWelcome
+  onBackToWelcome,
 }) => {
   const [perm, setPerm] = useState<NotificationPermission>('default');
 
@@ -44,7 +43,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     const granted = await requestNotificationPermission();
     setPerm(getNotificationPermission());
     if (granted) {
-      sendNotification("Mochi Reminders Enabled!", "Mochi will remind you when daily tasks are waiting! 🍃");
+      sendNotification('Mochi Reminders Enabled!', 'Mochi will remind you when daily tasks are waiting! 🍃');
     }
   };
 
@@ -52,108 +51,117 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} title="Companion Settings">
       <div className="space-y-3.5">
         {/* Audio Toggle */}
-        <div className="flex items-center justify-between p-2.5 bg-[#EDECE6] border border-[#111111] rounded">
-          <div className="flex items-center gap-2">
-            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        <div className="flex items-center justify-between p-3 bg-[#FAF8F5] border border-[#E8E3D8] rounded-xl">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-lg bg-[#FFFFFF] border border-[#E8E3D8] text-[#18181B]">
+              {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+            </div>
             <div>
-              <div className="font-bold text-xs">8-Bit Sound Synthesizer</div>
-              <div className="text-[10px] text-[#4B5563]">Procedural retro audio chimes</div>
+              <div className="font-semibold text-xs text-[#18181B]">8-Bit Audio Synth</div>
+              <div className="text-[10px] text-[#71717A]">Procedural audio chimes</div>
             </div>
           </div>
-          <Button
-            variant={isMuted ? 'light' : 'dark'}
-            size="sm"
+          <button
             onClick={onToggleMute}
+            className={`px-3 py-1 rounded-full text-xs font-bold transition-all shadow-xs ${
+              isMuted
+                ? 'bg-[#F3EFE6] text-[#71717A]'
+                : 'bg-[#18181B] text-[#FFFFFF]'
+            }`}
           >
-            {isMuted ? 'Muted' : 'Enabled'}
-          </Button>
+            {isMuted ? 'Muted' : 'Active'}
+          </button>
         </div>
 
         {/* Console Chassis Toggle (Desktop) */}
-        <div className="flex items-center justify-between p-2.5 bg-[#EDECE6] border border-[#111111] rounded">
-          <div className="flex items-center gap-2">
-            <Monitor size={16} />
+        <div className="flex items-center justify-between p-3 bg-[#FAF8F5] border border-[#E8E3D8] rounded-xl">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-lg bg-[#FFFFFF] border border-[#E8E3D8] text-[#18181B]">
+              <Monitor size={15} />
+            </div>
             <div>
-              <div className="font-bold text-xs">Handheld Console Bezel</div>
-              <div className="text-[10px] text-[#4B5563]">Retro hardware chassis framing</div>
+              <div className="font-semibold text-xs text-[#18181B]">Handheld Console Bezel</div>
+              <div className="text-[10px] text-[#71717A]">Physical retro chassis</div>
             </div>
           </div>
-          <Button
-            variant={chassisMode ? 'dark' : 'light'}
-            size="sm"
+          <button
             onClick={onToggleChassis}
+            className={`px-3 py-1 rounded-full text-xs font-bold transition-all shadow-xs ${
+              chassisMode
+                ? 'bg-[#18181B] text-[#FFFFFF]'
+                : 'bg-[#F3EFE6] text-[#71717A]'
+            }`}
           >
             {chassisMode ? 'Active' : 'Off'}
-          </Button>
+          </button>
         </div>
 
         {/* Notifications & Reminders */}
-        <div className="flex items-center justify-between p-2.5 bg-[#EDECE6] border border-[#111111] rounded">
-          <div className="flex items-center gap-2">
-            <Bell size={16} />
+        <div className="flex items-center justify-between p-3 bg-[#FAF8F5] border border-[#E8E3D8] rounded-xl">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-lg bg-[#FFFFFF] border border-[#E8E3D8] text-[#18181B]">
+              <Bell size={15} />
+            </div>
             <div>
-              <div className="font-bold text-xs">Daily Habit Reminders</div>
-              <div className="text-[10px] text-[#4B5563]">
+              <div className="font-semibold text-xs text-[#18181B]">Daily Habit Reminders</div>
+              <div className="text-[10px] text-[#71717A]">
                 {perm === 'granted'
                   ? 'Browser push active'
                   : perm === 'denied'
                   ? 'Blocked in browser permissions'
                   : isNotificationSupported()
                   ? 'Click to enable optional push'
-                  : 'In-app toasts active (browser unsupported)'}
+                  : 'In-app toasts active'}
               </div>
             </div>
           </div>
           {perm === 'granted' ? (
-            <span className="flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 bg-[#DCFCE7] text-[#166534] border border-[#166534] rounded">
-              <CheckCircle2 size={11} />
-              Active
-            </span>
-          ) : perm === 'denied' ? (
-            <span className="text-[10px] font-mono px-2 py-0.5 bg-[#FEE2E2] text-[#991B1B] border border-[#991B1B] rounded">
-              Blocked
+            <span className="flex items-center gap-1 text-[11px] font-semibold text-[#2D6343]">
+              <CheckCircle2 size={13} />
+              <span>Active</span>
             </span>
           ) : (
-            <Button
-              variant="dark"
-              size="sm"
+            <button
               onClick={handleEnableNotifications}
+              className="px-3 py-1 bg-[#18181B] hover:bg-[#27272A] text-[#FFFFFF] rounded-full text-xs font-bold shadow-xs transition-all"
             >
               Enable
-            </Button>
+            </button>
           )}
         </div>
 
         {/* Pet Origin Narrative */}
-        <div className="p-3 bg-[#FFFFFF] border-2 border-[#111111] rounded-lg shadow-[2px_2px_0px_#111111] space-y-1">
-          <div className="flex items-center gap-1.5 font-bold text-xs uppercase tracking-wider text-[#111111]">
-            <Info size={14} />
-            About Mochi (Task 1 Story)
+        <div className="p-3.5 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs space-y-1">
+          <div className="flex items-center gap-1.5 font-bold text-xs text-[#18181B]">
+            <Info size={14} className="text-[#C65A34]" />
+            <span>About Mochi</span>
           </div>
-          <p className="text-[11px] text-[#4B5563] leading-relaxed italic">
+          <p className="text-[11px] text-[#71717A] leading-relaxed italic">
             "My companion's name is Mochi. He came to me from inside a chip. I make him run, jump,
             feed him, sing songs, and do all sorts of things with him."
           </p>
         </div>
 
         {/* Onboarding Restart & Reset Actions */}
-        <div className="pt-2 border-t border-[#D4D4CE] flex items-center justify-between gap-2">
-          <Button variant="light" size="sm" onClick={onBackToWelcome}>
+        <div className="pt-2 border-t border-[#E8E3D8] flex items-center justify-between gap-2">
+          <button
+            onClick={onBackToWelcome}
+            className="px-3 py-1.5 bg-[#FAF8F5] hover:bg-[#F3EFE6] border border-[#E8E3D8] rounded-xl text-xs font-semibold text-[#18181B] transition-all"
+          >
             View Onboarding
-          </Button>
-          <Button
-            variant="light"
-            size="sm"
+          </button>
+          <button
             onClick={() => {
               if (window.confirm('Reset Mochi vitals to healthy defaults?')) {
                 sound.playChirp();
                 onResetPet();
               }
             }}
-            icon={<RotateCcw size={13} />}
+            className="flex items-center gap-1 px-3 py-1.5 bg-[#FEE2E2] hover:bg-[#FCD34D] text-[#DC2626] rounded-xl text-xs font-semibold transition-all"
           >
-            Reset Vitals
-          </Button>
+            <RotateCcw size={12} />
+            <span>Reset Vitals</span>
+          </button>
         </div>
       </div>
     </Modal>
