@@ -19,7 +19,7 @@ export interface AppSettings {
 export const DEFAULT_SETTINGS: AppSettings = {
   isMuted: false,
   hapticsEnabled: true,
-  chassisMode: true,
+  chassisMode: false,
   notificationsEnabled: false
 };
 

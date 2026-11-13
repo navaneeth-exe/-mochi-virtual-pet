@@ -115,9 +115,9 @@ export const App: React.FC = () => {
         onFeedButton={handleFeed}
         onPlayButton={handlePlay}
         onTasksButton={() => setCurrentScreen('tasks')}
-        onSettingsButton={() => setIsSettingsModalOpen(true)}
+        onSettingsButton={() => setCurrentScreen('settings')}
       >
-        <div className="w-full flex flex-col justify-between min-h-[640px] bg-[#FFFFFF] relative overflow-hidden transition-all">
+        <div className="w-full flex flex-col justify-between bg-[#FFFFFF] relative overflow-hidden transition-all">
           {/* Top Bar Navigation (when not on welcome) */}
           {currentScreen !== 'welcome' && (
             <TopBar
@@ -126,7 +126,7 @@ export const App: React.FC = () => {
               onToggleMute={handleToggleMute}
               onOpenTasks={() => setCurrentScreen('tasks')}
               onOpenShared={() => setCurrentScreen('shared')}
-              onOpenSettings={() => setIsSettingsModalOpen(true)}
+              onOpenSettings={() => setCurrentScreen('settings')}
               pendingTasksCount={pendingCount}
               berriesCount={pet.berriesCount}
               currentScreen={currentScreen}
@@ -155,11 +155,11 @@ export const App: React.FC = () => {
                 onDoubleTap={handleDoubleTap}
                 onSpacebarRun={handleSpacebarRun}
                 speechText={speechText}
-                onSetEmotionDirectly={handleSetEmotionDirectly}
                 tasks={tasks}
                 onToggleTask={toggleTask}
                 onNavigate={(s) => setCurrentScreen(s)}
                 streakDays={streakDays}
+                chassisMode={settings.chassisMode}
               />
             )}
 
@@ -173,6 +173,7 @@ export const App: React.FC = () => {
                 onBack={() => setCurrentScreen('pet')}
                 streakDays={streakDays}
                 onTriggerReminder={triggerReminder}
+                chassisMode={settings.chassisMode}
               />
             )}
 
@@ -188,6 +189,7 @@ export const App: React.FC = () => {
                 roomMembers={roomMembers}
                 currentUser={currentUser}
                 engineType={engineType}
+                chassisMode={settings.chassisMode}
               />
             )}
 
@@ -200,12 +202,13 @@ export const App: React.FC = () => {
                 onToggleChassis={handleToggleChassis}
                 onResetPet={handleResetPet}
                 onViewOnboarding={() => setCurrentScreen('welcome')}
+                onSetEmotion={handleSetEmotionDirectly}
               />
             )}
           </main>
 
-          {/* Modern Mobile Bottom Navigation (Hidden on Tablet / Desktop md:) */}
-          {currentScreen !== 'welcome' && (
+          {/* Modern Mobile Bottom Navigation (Hidden on Tablet / Desktop md: and in retro chassis) */}
+          {currentScreen !== 'welcome' && !settings.chassisMode && (
             <BottomNav
               currentScreen={currentScreen}
               onNavigate={(screen) => setCurrentScreen(screen)}

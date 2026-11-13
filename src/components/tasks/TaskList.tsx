@@ -13,6 +13,7 @@ interface TaskListProps {
   onDeleteTask: (id: string) => void;
   streakDays?: number;
   onTriggerReminder?: () => void;
+  chassisMode?: boolean;
 }
 
 type FilterType = 'all' | 'active' | 'completed';
@@ -25,6 +26,7 @@ export const TaskList: React.FC<TaskListProps> = ({
   onDeleteTask,
   streakDays = 3,
   onTriggerReminder,
+  chassisMode = false,
 }) => {
   const [newTitle, setNewTitle] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
@@ -51,7 +53,13 @@ export const TaskList: React.FC<TaskListProps> = ({
     }
   };
 
-  const quickSuggestions = ['Drink a glass of water', 'Walk for 10 minutes', 'Stretch & breathe', 'Read 5 pages'];
+  const quickSuggestions = [
+    'Drink water',
+    'Walk 10 mins',
+    'Stretch & breathe',
+    'Read 5 pages',
+    'Write thoughts',
+  ];
 
   const completedCount = tasks.filter((t) => t.isCompleted).length;
   const progressPercent = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
@@ -68,11 +76,15 @@ export const TaskList: React.FC<TaskListProps> = ({
   }, [tasks, filter]);
 
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
-      {/* Left Column on Desktop: Stats, Add Form, Filters (md:col-span-5) */}
-      <div className="md:col-span-5 space-y-4">
+    <div
+      className={`w-full gap-5 items-start ${
+        chassisMode ? 'flex flex-col space-y-4' : 'grid grid-cols-1 md:grid-cols-12'
+      }`}
+    >
+      {/* Left Column on Desktop / Top Section on Mobile: Goals, Add Form, Filters */}
+      <div className={`space-y-4 w-full ${!chassisMode ? 'md:col-span-5' : ''}`}>
         {/* Progress & Streak Card */}
-        <div className="p-4 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs space-y-3">
+        <div className="p-3.5 sm:p-4 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="p-1.5 bg-[#E8F2EA] rounded-xl text-[#2D6343]">
@@ -108,12 +120,13 @@ export const TaskList: React.FC<TaskListProps> = ({
 
           {/* Companion Benefit Note */}
           <div className="flex items-center justify-between pt-1 border-t border-[#F3EFE6] text-[10px] text-[#71717A]">
-            <span className="flex items-center gap-1 text-[#C65A34] font-medium">
+            <span className="flex items-center gap-1 text-[#C65A34] font-semibold">
               <Sparkles size={11} />
               +1 Berry & +15 Joy per goal
             </span>
             {onTriggerReminder && (
               <button
+                type="button"
                 onClick={onTriggerReminder}
                 className="flex items-center gap-1 text-[#18181B] hover:text-[#C65A34] font-semibold transition-colors"
               >
@@ -135,12 +148,12 @@ export const TaskList: React.FC<TaskListProps> = ({
                 if (errorMessage) setErrorMessage(null);
               }}
               placeholder="Add a new goal or habit..."
-              className="flex-1 px-3 py-1.5 text-xs sm:text-sm bg-transparent text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
+              className="flex-1 px-3 py-1 text-xs sm:text-sm bg-transparent text-[#18181B] placeholder-[#A1A1AA] focus:outline-none min-w-0"
               maxLength={80}
             />
             <button
               type="submit"
-              className="flex items-center gap-1 px-3.5 py-2 bg-[#18181B] hover:bg-[#27272A] text-[#FFFFFF] text-xs font-semibold rounded-xl transition-all shadow-xs shrink-0"
+              className="flex items-center gap-1 px-3 py-1.5 bg-[#18181B] hover:bg-[#27272A] text-[#FFFFFF] text-xs font-semibold rounded-xl transition-all shadow-xs shrink-0"
             >
               <Plus size={14} />
               <span>Add</span>
@@ -152,8 +165,8 @@ export const TaskList: React.FC<TaskListProps> = ({
           )}
 
           {/* Quick Suggestion Chips */}
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="text-[10px] text-[#71717A] py-0.5">Quick add:</span>
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5 select-none">
+            <span className="text-[10px] text-[#71717A] py-0.5 shrink-0">Quick add:</span>
             {quickSuggestions.map((suggestion) => (
               <button
                 key={suggestion}
@@ -162,7 +175,7 @@ export const TaskList: React.FC<TaskListProps> = ({
                   onAddTask(suggestion);
                   sound.playChirp();
                 }}
-                className="text-[10px] px-2 py-0.5 bg-[#FAF8F5] hover:bg-[#F3EFE6] border border-[#E8E3D8] rounded-full text-[#52525B] transition-colors"
+                className="text-[10px] px-2.5 py-0.5 bg-[#FAF8F5] hover:bg-[#F3EFE6] border border-[#E8E3D8] rounded-full text-[#52525B] font-medium transition-colors shrink-0"
               >
                 + {suggestion}
               </button>
@@ -171,11 +184,12 @@ export const TaskList: React.FC<TaskListProps> = ({
         </form>
 
         {/* Filter Tabs */}
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center justify-between pt-1 select-none">
           <div className="flex items-center gap-1 bg-[#F3EFE6] p-1 rounded-xl">
             {(['all', 'active', 'completed'] as FilterType[]).map((tab) => (
               <button
                 key={tab}
+                type="button"
                 onClick={() => {
                   sound.playChirp();
                   setFilter(tab);
@@ -191,14 +205,14 @@ export const TaskList: React.FC<TaskListProps> = ({
             ))}
           </div>
 
-          <span className="text-[11px] text-[#71717A]">
+          <span className="text-[11px] text-[#71717A] font-medium">
             {filteredTasks.length} {filteredTasks.length === 1 ? 'task' : 'tasks'}
           </span>
         </div>
       </div>
 
-      {/* Right Column on Desktop: Tasks List Container (md:col-span-7) */}
-      <div className="md:col-span-7 space-y-2.5">
+      {/* Right Column on Desktop / Lower Section on Mobile: Tasks List Container */}
+      <div className={`space-y-2.5 w-full ${!chassisMode ? 'md:col-span-7' : ''}`}>
         <AnimatePresence mode="popLayout">
           {filteredTasks.length > 0 ? (
             filteredTasks.map((task) => (
@@ -206,29 +220,27 @@ export const TaskList: React.FC<TaskListProps> = ({
                 key={task.id}
                 task={task}
                 onToggle={onToggleTask}
-                onDelete={onDeleteTask}
                 onEdit={onEditTask}
+                onDelete={onDeleteTask}
               />
             ))
           ) : (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="py-14 flex flex-col items-center justify-center text-center p-6 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="p-8 text-center bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs space-y-2"
             >
-              <div className="w-12 h-12 rounded-full bg-[#FAF8F5] flex items-center justify-center text-2xl mb-2">
-                🌱
+              <div className="w-12 h-12 mx-auto rounded-full bg-[#E8F2EA] flex items-center justify-center text-[#2D6343]">
+                <CheckCircle2 size={24} />
               </div>
-              <h4 className="text-xs font-bold text-[#18181B]">
-                {filter === 'completed'
-                  ? 'No completed tasks yet'
-                  : filter === 'active'
-                  ? 'All tasks done for now!'
-                  : 'No tasks added yet'}
+              <h4 className="text-sm font-bold text-[#18181B]">
+                {filter === 'completed' ? 'No completed tasks yet!' : 'All daily goals caught up!'}
               </h4>
-              <p className="text-[11px] text-[#71717A] max-w-xs mt-1">
-                Add a small goal to earn delicious berries for Mochi.
+              <p className="text-xs text-[#71717A] max-w-xs mx-auto">
+                {filter === 'completed'
+                  ? 'Complete your habits to nourish Mochi and earn berries.'
+                  : 'Add a new habit above or take a well-deserved rest with Mochi.'}
               </p>
             </motion.div>
           )}

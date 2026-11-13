@@ -13,6 +13,7 @@ interface TasksScreenProps {
   onBack: () => void;
   streakDays?: number;
   onTriggerReminder?: () => void;
+  chassisMode?: boolean;
 }
 
 export const TasksScreen: React.FC<TasksScreenProps> = ({
@@ -24,17 +25,18 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
   onBack,
   streakDays = 3,
   onTriggerReminder,
+  chassisMode = false,
 }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ duration: 0.25 }}
-      className="flex flex-col p-3.5 sm:p-5 lg:p-6 min-h-[580px] lg:min-h-[660px] bg-[#FAF8F5] space-y-4 w-full"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      className="flex flex-col p-3.5 sm:p-5 lg:p-6 bg-[#FAF8F5] space-y-4 w-full"
     >
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-[#E8E3D8]">
+      <div className="flex items-center justify-between pb-2 border-b border-[#E8E3D8] select-none">
         <button
           onClick={onBack}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FFFFFF] hover:bg-[#F3EFE6] border border-[#E8E3D8] rounded-xl text-xs font-semibold text-[#18181B] transition-all shadow-xs"
@@ -45,14 +47,14 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
 
         <div className="flex items-center gap-1.5">
           <CheckSquare size={16} className="text-[#C65A34]" />
-          <h1 className="text-sm font-bold text-[#18181B]">Companion Tasks & Habits</h1>
+          <h1 className="text-xs sm:text-sm font-bold text-[#18181B]">Companion Tasks & Habits</h1>
         </div>
 
-        <div className="w-16" /> {/* Balance spacer */}
+        <div className="w-12 sm:w-16" /> {/* Balance spacer */}
       </div>
 
-      {/* Responsive Task List Component */}
-      <div className="flex-1 pb-4">
+      {/* Task List Component */}
+      <div className="w-full pb-2">
         <TaskList
           tasks={tasks}
           onAddTask={onAddTask}
@@ -61,6 +63,7 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
           onDeleteTask={onDeleteTask}
           streakDays={streakDays}
           onTriggerReminder={onTriggerReminder}
+          chassisMode={chassisMode}
         />
       </div>
     </motion.div>

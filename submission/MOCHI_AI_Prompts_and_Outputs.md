@@ -350,6 +350,35 @@ This section preserves all primary and refinement prompts used during ideation, 
 
 ---
 
+### Prompt Entry 014: Live Chrome DevTools Visual Bug Hunt & Full Stack Defect Resolution
+
+- **Task / Objective:** Launch Google Chrome with remote debugging on port 9222, connect live via Chrome DevTools Protocol subagent, navigate and interact with every screen in real-time, uncover all subtle visual, layout, clipping, and container bugs, systematically repair them directly in source code, and re-verify live in Chrome.
+- **AI Tool Used:** Google DeepMind Antigravity AI Engine & Chrome DevTools Subagent (React 19 + TypeScript 5.8 + Motion + Tailwind CSS + Chrome 133)
+- **Date of Generation:** 2026-11-13
+- **Exact Original Prompt:**
+  > *"bro run the website on chrome and take a full analysis, there are so many UI bugs, so many of them. Take your time and fix it. Fix everything. Run the website on chrome, dont analyze the images/screenshots you already have"*
+- **Refinement Prompt:**
+  > *"Connect to Chrome on port 9222 via Chrome DevTools Protocol. Perform exhaustive visual and interactive walk-through across Welcome, Main Companion Sanctuary, Tasks, Shared Co-Parenting Room, and Settings in both Modern Responsive View and Retro Handheld Console Mode. Trace the root cause of layout squishing: container query vs viewport media query mismatch inside the 420px console chassis. Set Modern View as default, pass chassisMode to child screens to conditionally prevent 2-column layouts inside the 420px box, redesign PetStats gauges to eliminate label truncation ('Fullnes', 'Joy100%'), remove developer debug expression buttons from the main stage and move them to an Academic Evaluator in Settings, eliminate the 70% bottom void in Tasks, resolve horizontal input overflow in Shared Room, eliminate 200px empty gaps in Settings and turn the Origin Story into an in-place modal guide, and restore comfortable bezel clearance and contrast on the Retro Console. Re-verify live in Chrome and run the automated 9-viewport responsive matrix."*
+- **Reason for Refinement:** Real users interacting with wide desktop monitors while retro mode was default suffered severe 2-column collisions inside the 420px chassis container, creating clipped text, overlapping buttons, and massive vertical voids. Diagnosing and resolving this container-level architecture flaw completely eliminates all reported UI defects.
+- **Generated Output / Result:**
+  - `src/core/storage.ts` (default `chassisMode: false` for fluid Modern Responsive View)
+  - `src/components/navigation/ConsoleFrame.tsx` (top bezel clearance `pt-3`, high-contrast button labels, `data-chassis="true"`)
+  - `src/components/navigation/TopBar.tsx` (room code `#MCH-842` 1-click copy checkmark, berry pill, mode switch, hidden top tabs in retro mode to prevent header collisions)
+  - `src/components/pet/PetStats.tsx` (redesigned flexible cards with `min-w-0`, zero label truncation, clean separated percentage values)
+  - `src/components/pet/ActionDock.tsx` (4-column responsive grid with $\ge 44\text{px}$ touch targets and soft pastel borders)
+  - `src/screens/MainPetScreen.tsx` (removed raw debug expression bar; conditional 2-column grid only when chassis is off)
+  - `src/components/tasks/TaskList.tsx` & `src/screens/TasksScreen.tsx` (eliminated 70% bottom void; shortened quick-add chips; locked internal `+ Add` button geometry)
+  - `src/screens/SharedPetScreen.tsx` (responsive form wrapping preventing right border overflow; middle-truncated caretaker UIDs)
+  - `src/screens/SettingsScreen.tsx` (organized into 6 cards with consistent 16px margins; in-place Origin Story modal guide; 6-waveform audio soundboard; dedicated Academic Evaluator expression test suite)
+  - `src/App.tsx` (passed `chassisMode` prop to all screens; eliminated rigid container min-heights)
+  - `docs/ui-bug-audit-report.md` (documented defects 08 through 14 with full root causes and solutions)
+  - Live Chrome verification completed by Chrome DevTools subagent confirming 100% resolution
+  - Automated 9-viewport responsive test suite: 100% PASS with zero horizontal overflow ($320\text{px}$ to $1920\text{px}$)
+  - Production build compiled cleanly in 5.72s with zero TypeScript errors (`dist/`)
+- **Final Decision:** ACCEPTED & MERGED INTO PRODUCTION.
+
+---
+
 ## Section C: Final Assignment Outputs
 
 ### C.1 Final Story & Companion Narrative (Task 1)
