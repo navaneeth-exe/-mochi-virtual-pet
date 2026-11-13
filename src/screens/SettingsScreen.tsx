@@ -53,7 +53,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.25 }}
-      className="flex flex-col p-4 sm:p-5 min-h-[560px] bg-[#FAF8F5] space-y-4"
+      className="flex flex-col p-3.5 sm:p-5 lg:p-6 min-h-[580px] lg:min-h-[660px] bg-[#FAF8F5] space-y-4 w-full"
     >
       {/* Top Header */}
       <div className="flex items-center justify-between pb-2 border-b border-[#E8E3D8]">
@@ -70,7 +70,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <div className="w-16" />
       </div>
 
-      <div className="space-y-3.5 flex-1 overflow-y-auto pr-1">
+      {/* Responsive Grid: Single column on mobile, 2 columns on tablet/desktop (md:) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 overflow-y-auto pr-1 items-start">
         {/* Section 1: Audio & Sound Effects */}
         <div className="p-4 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs space-y-3">
           <div className="flex items-center justify-between">
@@ -185,8 +186,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </button>
         </div>
 
-        {/* Section 5: Danger Zone (Reset Pet) */}
-        <div className="p-4 bg-[#FFFFFF] border border-[#FCA5A5] rounded-2xl shadow-xs space-y-2">
+        {/* Section 5: Danger Zone (Reset Pet) - Spans 2 cols on md: */}
+        <div className="md:col-span-2 p-4 bg-[#FFFFFF] border border-[#FCA5A5] rounded-2xl shadow-xs space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-xl bg-[#FEE2E2] text-[#DC2626]">

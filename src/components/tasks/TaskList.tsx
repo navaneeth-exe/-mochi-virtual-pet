@@ -68,89 +68,90 @@ export const TaskList: React.FC<TaskListProps> = ({
   }, [tasks, filter]);
 
   return (
-    <div className="space-y-4">
-      {/* Progress & Streak Card */}
-      <div className="p-4 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-sm space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-[#E8F2EA] rounded-xl text-[#2D6343]">
-              <CheckCircle2 size={16} />
+    <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+      {/* Left Column on Desktop: Stats, Add Form, Filters (md:col-span-5) */}
+      <div className="md:col-span-5 space-y-4">
+        {/* Progress & Streak Card */}
+        <div className="p-4 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 bg-[#E8F2EA] rounded-xl text-[#2D6343]">
+                <CheckCircle2 size={16} />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#18181B]">Daily Goals</h3>
+                <p className="text-[10px] text-[#71717A]">Complete tasks to nourish Mochi</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xs font-bold text-[#18181B]">Daily Goals</h3>
-              <p className="text-[10px] text-[#71717A]">Complete tasks to nourish Mochi</p>
+
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#FDF0EB] border border-[#F6DACF] rounded-full text-xs font-bold text-[#C65A34]">
+              <Flame size={13} className="fill-[#C65A34]" />
+              <span>{streakDays}d Streak</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#FDF0EB] border border-[#F6DACF] rounded-full text-xs font-bold text-[#C65A34]">
-            <Flame size={13} className="fill-[#C65A34]" />
-            <span>{streakDays}d Streak</span>
+          {/* Smooth Progress Bar */}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between text-[11px] font-medium text-[#71717A]">
+              <span>{completedCount} of {tasks.length} completed</span>
+              <span className="font-mono font-bold text-[#18181B]">{progressPercent}%</span>
+            </div>
+            <div className="w-full h-2.5 bg-[#F3EFE6] rounded-full overflow-hidden p-0.5 border border-[#E8E3D8]">
+              <motion.div
+                initial={false}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ type: 'spring', damping: 20, stiffness: 200 }}
+                className="h-full bg-[#407655] rounded-full"
+              />
+            </div>
+          </div>
+
+          {/* Companion Benefit Note */}
+          <div className="flex items-center justify-between pt-1 border-t border-[#F3EFE6] text-[10px] text-[#71717A]">
+            <span className="flex items-center gap-1 text-[#C65A34] font-medium">
+              <Sparkles size={11} />
+              +1 Berry & +15 Joy per goal
+            </span>
+            {onTriggerReminder && (
+              <button
+                onClick={onTriggerReminder}
+                className="flex items-center gap-1 text-[#18181B] hover:text-[#C65A34] font-semibold transition-colors"
+              >
+                <Bell size={11} />
+                <span>Remind</span>
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Smooth Progress Bar */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-[11px] font-medium text-[#71717A]">
-            <span>{completedCount} of {tasks.length} completed</span>
-            <span className="font-mono font-bold text-[#18181B]">{progressPercent}%</span>
-          </div>
-          <div className="w-full h-2.5 bg-[#F3EFE6] rounded-full overflow-hidden p-0.5 border border-[#E8E3D8]">
-            <motion.div
-              initial={false}
-              animate={{ width: `${progressPercent}%` }}
-              transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-              className="h-full bg-[#407655] rounded-full"
+        {/* Quick Add Form */}
+        <form onSubmit={handleSubmit} className="space-y-2">
+          <div className="flex items-center gap-2 p-1.5 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs focus-within:border-[#18181B] focus-within:shadow-sm transition-all">
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(e) => {
+                setNewTitle(e.target.value);
+                if (errorMessage) setErrorMessage(null);
+              }}
+              placeholder="Add a new goal or habit..."
+              className="flex-1 px-3 py-1.5 text-xs sm:text-sm bg-transparent text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
+              maxLength={80}
             />
-          </div>
-        </div>
-
-        {/* Companion Benefit Note */}
-        <div className="flex items-center justify-between pt-1 border-t border-[#F3EFE6] text-[10px] text-[#71717A]">
-          <span className="flex items-center gap-1 text-[#C65A34] font-medium">
-            <Sparkles size={11} />
-            +1 Berry & +15 Pet Joy per goal
-          </span>
-          {onTriggerReminder && (
             <button
-              onClick={onTriggerReminder}
-              className="flex items-center gap-1 text-[#18181B] hover:text-[#C65A34] font-semibold transition-colors"
+              type="submit"
+              className="flex items-center gap-1 px-3.5 py-2 bg-[#18181B] hover:bg-[#27272A] text-[#FFFFFF] text-xs font-semibold rounded-xl transition-all shadow-xs shrink-0"
             >
-              <Bell size={11} />
-              <span>Remind Me</span>
+              <Plus size={14} />
+              <span>Add</span>
             </button>
+          </div>
+
+          {errorMessage && (
+            <p className="text-[11px] text-[#DC2626] font-medium px-2">{errorMessage}</p>
           )}
-        </div>
-      </div>
 
-      {/* Quick Add Form */}
-      <form onSubmit={handleSubmit} className="space-y-2">
-        <div className="flex items-center gap-2 p-1.5 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl shadow-xs focus-within:border-[#18181B] focus-within:shadow-sm transition-all">
-          <input
-            type="text"
-            value={newTitle}
-            onChange={(e) => {
-              setNewTitle(e.target.value);
-              if (errorMessage) setErrorMessage(null);
-            }}
-            placeholder="Add a new goal or habit..."
-            className="flex-1 px-3 py-1.5 text-xs sm:text-sm bg-transparent text-[#18181B] placeholder-[#A1A1AA] focus:outline-none"
-            maxLength={80}
-          />
-          <button
-            type="submit"
-            className="flex items-center gap-1 px-3.5 py-2 bg-[#18181B] hover:bg-[#27272A] text-[#FFFFFF] text-xs font-semibold rounded-xl transition-all shadow-xs shrink-0"
-          >
-            <Plus size={14} />
-            <span>Add</span>
-          </button>
-        </div>
-
-        {errorMessage && (
-          <p className="text-[11px] text-[#DC2626] font-medium px-2">{errorMessage}</p>
-        )}
-
-        {/* Quick Suggestion Chips */}
-        {tasks.length < 3 && (
+          {/* Quick Suggestion Chips */}
           <div className="flex flex-wrap gap-1.5 pt-1">
             <span className="text-[10px] text-[#71717A] py-0.5">Quick add:</span>
             {quickSuggestions.map((suggestion) => (
@@ -167,37 +168,37 @@ export const TaskList: React.FC<TaskListProps> = ({
               </button>
             ))}
           </div>
-        )}
-      </form>
+        </form>
 
-      {/* Filter Tabs */}
-      <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-1 bg-[#F3EFE6] p-1 rounded-xl">
-          {(['all', 'active', 'completed'] as FilterType[]).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => {
-                sound.playChirp();
-                setFilter(tab);
-              }}
-              className={`px-3 py-1 rounded-lg text-[11px] font-semibold capitalize transition-all ${
-                filter === tab
-                  ? 'bg-[#FFFFFF] text-[#18181B] shadow-xs'
-                  : 'text-[#71717A] hover:text-[#18181B]'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+        {/* Filter Tabs */}
+        <div className="flex items-center justify-between pt-1">
+          <div className="flex items-center gap-1 bg-[#F3EFE6] p-1 rounded-xl">
+            {(['all', 'active', 'completed'] as FilterType[]).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => {
+                  sound.playChirp();
+                  setFilter(tab);
+                }}
+                className={`px-3 py-1 rounded-lg text-[11px] font-semibold capitalize transition-all ${
+                  filter === tab
+                    ? 'bg-[#FFFFFF] text-[#18181B] shadow-xs'
+                    : 'text-[#71717A] hover:text-[#18181B]'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
+          <span className="text-[11px] text-[#71717A]">
+            {filteredTasks.length} {filteredTasks.length === 1 ? 'task' : 'tasks'}
+          </span>
         </div>
-
-        <span className="text-[11px] text-[#71717A]">
-          {filteredTasks.length} {filteredTasks.length === 1 ? 'task' : 'tasks'}
-        </span>
       </div>
 
-      {/* Tasks List Container */}
-      <div className="space-y-2">
+      {/* Right Column on Desktop: Tasks List Container (md:col-span-7) */}
+      <div className="md:col-span-7 space-y-2.5">
         <AnimatePresence mode="popLayout">
           {filteredTasks.length > 0 ? (
             filteredTasks.map((task) => (
@@ -214,7 +215,7 @@ export const TaskList: React.FC<TaskListProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="py-12 flex flex-col items-center justify-center text-center p-6 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl"
+              className="py-14 flex flex-col items-center justify-center text-center p-6 bg-[#FFFFFF] border border-[#E8E3D8] rounded-2xl"
             >
               <div className="w-12 h-12 rounded-full bg-[#FAF8F5] flex items-center justify-center text-2xl mb-2">
                 🌱

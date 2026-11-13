@@ -23,7 +23,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   ];
 
   return (
-    <nav className="w-full bg-[#FFFFFF]/95 backdrop-blur-md border-t border-[#E8E3D8] px-3 py-1.5 flex items-center justify-around z-40 shadow-sm">
+    <nav className="md:hidden w-full bg-[#FFFFFF]/95 backdrop-blur-md border-t border-[#E8E3D8] px-3 py-1.5 flex items-center justify-around z-40 shadow-sm transition-all pb-safe">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = currentScreen === tab.id;
@@ -35,7 +35,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               sound.playChirp();
               onNavigate(tab.id);
             }}
-            className="relative flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all focus:outline-none"
+            className="relative flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all focus:outline-none min-h-[44px] min-w-[44px]"
           >
             {/* Active Pill Indicator */}
             {isActive && (

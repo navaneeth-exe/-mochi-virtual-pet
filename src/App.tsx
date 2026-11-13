@@ -109,7 +109,7 @@ export const App: React.FC = () => {
       {/* Toast Alert */}
       <Toast message={toastMessage} />
 
-      {/* Handheld Frame / Modern Device Chassis Container */}
+      {/* Handheld Frame / Responsive Device Chassis Container */}
       <ConsoleFrame
         enabled={settings.chassisMode}
         onFeedButton={handleFeed}
@@ -117,7 +117,7 @@ export const App: React.FC = () => {
         onTasksButton={() => setCurrentScreen('tasks')}
         onSettingsButton={() => setIsSettingsModalOpen(true)}
       >
-        <div className="w-full flex flex-col justify-between min-h-[640px] bg-[#FFFFFF] relative overflow-hidden">
+        <div className="w-full flex flex-col justify-between min-h-[640px] bg-[#FFFFFF] relative overflow-hidden transition-all">
           {/* Top Bar Navigation (when not on welcome) */}
           {currentScreen !== 'welcome' && (
             <TopBar
@@ -129,6 +129,10 @@ export const App: React.FC = () => {
               onOpenSettings={() => setIsSettingsModalOpen(true)}
               pendingTasksCount={pendingCount}
               berriesCount={pet.berriesCount}
+              currentScreen={currentScreen}
+              onNavigate={(s) => setCurrentScreen(s)}
+              chassisMode={settings.chassisMode}
+              onToggleChassis={handleToggleChassis}
             />
           )}
 
@@ -152,6 +156,10 @@ export const App: React.FC = () => {
                 onSpacebarRun={handleSpacebarRun}
                 speechText={speechText}
                 onSetEmotionDirectly={handleSetEmotionDirectly}
+                tasks={tasks}
+                onToggleTask={toggleTask}
+                onNavigate={(s) => setCurrentScreen(s)}
+                streakDays={streakDays}
               />
             )}
 
@@ -196,7 +204,7 @@ export const App: React.FC = () => {
             )}
           </main>
 
-          {/* Modern Bottom Navigation */}
+          {/* Modern Mobile Bottom Navigation (Hidden on Tablet / Desktop md:) */}
           {currentScreen !== 'welcome' && (
             <BottomNav
               currentScreen={currentScreen}

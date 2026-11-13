@@ -20,7 +20,7 @@ export const ConsoleFrame: React.FC<ConsoleFrameProps> = ({
 }) => {
   if (!enabled) {
     return (
-      <div className="w-full max-w-[460px] mx-auto bg-[#FFFFFF] rounded-3xl shadow-[0_16px_48px_rgba(24,24,27,0.08)] border border-[#E8E3D8] overflow-hidden flex flex-col transition-all">
+      <div className="w-full max-w-md md:max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-auto bg-[#FFFFFF] rounded-2xl md:rounded-3xl shadow-[0_16px_48px_rgba(24,24,27,0.08)] border border-[#E8E3D8] overflow-hidden flex flex-col transition-all">
         {children}
       </div>
     );
