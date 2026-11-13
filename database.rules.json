@@ -1,0 +1,50 @@
+{
+  "rules": {
+    "pets": {
+      "$petId": {
+        ".read": "auth != null && data.child('members/' + auth.uid).exists()",
+        ".write": "auth != null && (data.child('members/' + auth.uid).exists() || (!data.exists() && newData.child('metadata/ownerUid').val() === auth.uid))",
+        "state": {
+          ".validate": "newData.hasChildren(['hunger', 'happiness', 'energy', 'currentEmotion', 'version'])",
+          "hunger": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "happiness": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "energy": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "currentEmotion": {
+            ".validate": "newData.val() == 'happy' || newData.val() == 'sad' || newData.val() == 'surprised' || newData.val() == 'angry' || newData.val() == 'idle'"
+          },
+          "version": {
+            ".validate": "newData.isNumber() && (!data.exists() || newData.val() >= data.val())"
+          }
+        },
+        "members": {
+          "$uid": {
+            ".validate": "newData.hasChildren(['role', 'joinedAt', 'displayName']) && (newData.child('role').val() == 'owner' || newData.child('role').val() == 'caretaker')"
+          }
+        },
+        "tasks": {
+          "$taskId": {
+            ".validate": "newData.hasChildren(['id', 'title', 'isCompleted', 'createdAt'])"
+          }
+        },
+        "interactions": {
+          "$interactionId": {
+            ".validate": "newData.hasChildren(['actorUid', 'actionType', 'timestamp'])"
+          }
+        }
+      }
+    },
+    "pairingCodes": {
+      "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null && (!data.exists() || data.child('ownerUid').val() === auth.uid)"
+      }
+    }
+  }
+}
+
